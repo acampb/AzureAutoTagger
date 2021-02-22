@@ -4,10 +4,11 @@
     "parameters": {},
     "functions": [],
     "variables": {
-        "planName": "plan-tagbot",
-        "storageAccountName": "[concat('sttagbot', uniqueString(resourceGroup().id))]",
+        "planName": "plan-autotagger",
+        "storageAccountName": "[concat('stautotag', uniqueString(resourceGroup().id))]",
         "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-        "functionName": "func-tagbot"
+        "functionName": "func-autotagger",
+        "functionAppZipUri": "https://github.com/acampb/AzureAutoTagger/raw/main/func.zip"
     },
     "resources": [
         {
@@ -89,11 +90,27 @@
                         }
                     ]
                 }
-            }
+            },
+            "resources": [
+                {
+                    "apiVersion": "2015-08-01",
+                    "name": "web",
+                    "type": "sourcecontrols",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites/', variables('functionName'))]"
+                    ],
+                    "properties": {
+                        "RepoUrl": "https://github.com/acampb/AzureAutoTagger.git",
+                        "branch": "main",
+                        "IsManualIntegration": true
+                    }
+                }
+            ]
+
         },
         {
             "type": "Microsoft.Web/sites/config",
-            "apiVersion": "2020-09-01",
+            "apiVersion": "2018-11-01",
             "name": "[concat(variables('functionName'), '/web')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Web/sites', variables('functionName'))]"
