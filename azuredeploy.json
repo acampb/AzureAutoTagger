@@ -17,7 +17,7 @@
             "apiVersion": "2018-02-01",
             "location": "[resourceGroup().location]",
             "sku": {
-                "name": "F1",
+                "name": "Y1",
                 "capacity": 1
             },
             "properties": {
@@ -31,8 +31,8 @@
             "location": "[resourceGroup().location]",
             "kind": "StorageV2",
             "sku": {
-                "name": "Premium_LRS",
-                "tier": "Premium"
+                "name": "Standard_LRS",
+                "tier": "Standard"
             }
         },
         {
@@ -56,26 +56,22 @@
                         //     "name": "AzureWebJobsDashboard",
                         //     "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2015-05-01-preview').key1)]"
                         // },
-                        // {
-                        //     "name": "AzureWebJobsStorage",
-                        //     "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2015-05-01-preview').key1)]"
-                        // },
-                        // {
-                        //     "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
-                        //     "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2015-05-01-preview').key1)]"
-                        // },
-                        // {
-                        //     "name": "WEBSITE_CONTENTSHARE",
-                        //     "value": "[toLower(variables('functionName'))]"
-                        // },
+                        {
+                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(variables('storageAccountid'),'2019-06-01').keys[0].value)]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTSHARE",
+                            "value": "[toLower(variables('functionName'))]"
+                        },
                         {
                             "name": "AzureWebJobsStorage",
                             "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(variables('storageAccountid'),'2019-06-01').keys[0].value)]"
                         },
-                        {
-                            "name": "AzureWebJobsDashboard",
-                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(variables('storageAccountid'),'2019-06-01').keys[0].value)]"
-                        },
+                        // {
+                        //     "name": "AzureWebJobsDashboard",
+                        //     "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(variables('storageAccountid'),'2019-06-01').keys[0].value)]"
+                        // },
                         {
                             "name": "FUNCTIONS_EXTENSION_VERSION",
                             "value": "~3"
@@ -100,7 +96,7 @@
                         "[resourceId('Microsoft.Web/sites/', variables('functionName'))]"
                     ],
                     "properties": {
-                        "RepoUrl": "https://github.com/acampb/AzureAutoTagger.git",
+                        "RepoUrl": "https://github.com/acampb/AzureAutoTaggerFunction.git",
                         "branch": "main",
                         "IsManualIntegration": true
                     }
