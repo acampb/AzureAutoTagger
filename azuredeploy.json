@@ -8,9 +8,13 @@
         "storageAccountName": "[concat('stautotag', uniqueString(resourceGroup().id))]",
         "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
         "functionName": "func-autotagger",
-        "functionAppZipUri": "https://github.com/acampb/AzureAutoTagger/raw/main/func.zip"
+        "functionAppZipUri": "https://github.com/acampb/AzureAutoTagger/raw/main/func.zip",
+        "eventGridTopic": "egt-autotagger",
+        "eventGridSubscriptionName": "egs-autotagger",
+        "tagsContributorRoleId": "4a9ae827-6dc8-4573-8ac7-8239d42aa03f"
     },
     "resources": [
+        
         {
             "name": "[variables('planName')]",
             "type": "Microsoft.Web/serverfarms",
@@ -114,7 +118,65 @@
             "properties": {
                 "powerShellVersion": "~7"
             }
+        },
+        {
+            "name": "[variables('eventGridTopic')]",
+            "type": "Microsoft.EventGrid/systemTopics",
+            "apiVersion": "2020-04-01-preview",
+            "location": "global",
+            "properties": {
+                "source": "[subscription().id]",
+                "topicType": "Microsoft.Resources.Subscriptions"
+            }
+        },
+        {
+            "name": "[concat(variables('eventGridTopic'), '/', variables('eventGridSubscriptionName'))]",
+            "type": "Microsoft.EventGrid/systemTopics/eventSubscriptions",
+            "apiVersion": "2020-04-01-preview",
+            "dependsOn": [
+                "[resourceId('Microsoft.EventGrid/systemTopics', variables('eventGridTopic'))]",
+                "[resourceId('Microsoft.Web/sites/sourcecontrols', variables('functionName'), 'web')]"
+            ],
+            "properties": {
+                "destination": {
+                    "endpointType": "AzureFunction",
+                    "properties": {
+                        "resourceId": "[concat(resourceId('Microsoft.Web/sites', variables('functionName')), '/functions/AutoTagger')]",
+                        "maxEventsPerBatch": 1,
+                        "preferredBatchSizeInKilobytes": 64
+                    }
+                },
+                "filter": {
+                    "includedEventTypes": [
+                        "Microsoft.Resources.ResourceWriteSuccess"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "[guid(subscription().id)]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2017-09-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', variables('functionName'))]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('tagsContributorRoleId'))]",
+                //"roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '4a9ae827-6dc8-4573-8ac7-8239d42aa03f')]",
+                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('functionName')), '2019-08-01', 'full').identity.principalId]"
+            }
         }
+
+
     ],
-    "outputs": {}
+    "outputs": {
+        "functionAppResourceId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Web/sites', variables('functionName'))]"
+        },
+        "functionAppIdentityId": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.Web/sites', variables('functionName')), '2019-08-01', 'full').identity.principalId]"
+        }
+    }
 }

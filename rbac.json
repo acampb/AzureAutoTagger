@@ -1,0 +1,44 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "roleDefinitionId": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": "4a9ae827-6dc8-4573-8ac7-8239d42aa03f"
+        },
+        "principalId": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            },
+            "defaultValue": "4b757bc8-40ca-4003-9e3c-19dd626f6480"
+        },
+        "roleNameGuid": {
+            "type": "string",
+            "defaultValue": "[newGuid()]",
+            "metadata": {
+                "description": "A new GUID used to identify the role assignment"
+            }
+        }
+    },
+    "functions": [],
+    "variables": {
+        "roleDefinitionFull": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', parameters('roleDefinitionId'))]"
+    },
+    "resources": [
+        {
+            "name": "[parameters('roleNameGuid')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2017-09-01",
+            "properties": {
+                "roleDefinitionId": "[variables('roleDefinitionFull')]",
+                "principalId": "[parameters('principalId')]"
+            }
+        }
+
+    ],
+    "outputs": {}
+}
