@@ -13,10 +13,9 @@
             "type": "string",
             "metadata": {
                 "description": "description"
-            },
-            "defaultValue": "4b757bc8-40ca-4003-9e3c-19dd626f6480"
+            }
         },
-        "roleNameGuid": {
+        "roleAssignmentGuid": {
             "type": "string",
             "defaultValue": "[newGuid()]",
             "metadata": {
@@ -30,7 +29,7 @@
     },
     "resources": [
         {
-            "name": "[parameters('roleNameGuid')]",
+            "name": "[parameters('roleAssignmentGuid')]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2017-09-01",
             "properties": {
