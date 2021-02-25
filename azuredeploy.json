@@ -52,6 +52,10 @@
             "name": "rbac",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-06-01",
+            "location": "[parameters('location')]",
+            "dependsOn":[
+                "eventgridfunctionapp"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -59,10 +63,17 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "principalId": "[reference('eventgridfunctionapp').outputs.functionAppIdentityId.value]"
+                    "principalId": {
+                        "value": "[reference('eventgridfunctionapp').outputs.functionAppIdentityId.value]"
+                    }
                 }
             }
         }
     ],
-    "outputs": {}
+    "outputs": {
+        "functionAppIdentityId": {
+            "type": "string",
+            "value": "[reference('eventgridfunctionapp').outputs.functionAppIdentityId.value]"
+        }
+    }
 }
