@@ -14,7 +14,7 @@
             "metadata": {
                 "description": "description"
             },
-            "defaultValue": "rg-autotaggerv2"
+            "defaultValue": "rg-autotaggerv3"
         }
     },
     "functions": [],
@@ -49,7 +49,31 @@
             }
         },
         {
-            "name": "rbac",
+            "name": "rbac-reader",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-06-01",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "eventgridfunctionapp"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/acampb/AzureAutoTagger/main/rbac.json",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "roleDefinitionId": {
+                        "value": "acdd72a7-3385-48ef-bd42-f606fba81ae7"
+                    },
+                    "principalId": {
+                        "value": "[reference('eventgridfunctionapp').outputs.functionAppIdentityId.value]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "rbac-tagcontributor",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-06-01",
             "location": "[parameters('location')]",
@@ -63,6 +87,9 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "roleDefinitionId": {
+                        "value": "4a9ae827-6dc8-4573-8ac7-8239d42aa03f"
+                    },
                     "principalId": {
                         "value": "[reference('eventgridfunctionapp').outputs.functionAppIdentityId.value]"
                     }

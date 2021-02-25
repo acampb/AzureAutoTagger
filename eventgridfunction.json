@@ -4,13 +4,16 @@
     "parameters": {},
     "functions": [],
     "variables": {
-        "planName": "plan-autotagger",
-        "storageAccountName": "[concat('stautotag', uniqueString(resourceGroup().id))]",
+        "uniqueString": "[uniqueString(subscription().subscriptionId)]",
+        //"substring": "[substring(variables('uniqueString'), 9, 4)]",
+
+        "planName": "[concat('plan-autotagger-', variables('uniqueString'))]",
+        "storageAccountName": "[concat('st', variables('uniqueString'))]",
         "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-        "functionName": "func-autotagger",
-        "eventGridTopic": "egt-autotagger",
-        "eventGridSubscriptionName": "egs-autotagger",
-        "appInsightsName": "insights-autotagger"
+        "functionName": "[concat('func-autotagger-', variables('uniqueString'))]",
+        "eventGridTopic": "[concat('evt-autotagger-', variables('uniqueString'))]",
+        "eventGridSubscriptionName": "[concat('evs-autotagger-', variables('uniqueString'))]",
+        "appInsightsName": "[concat('insights-autotagger-', variables('uniqueString'))]"
     },
     "resources": [
         {
@@ -54,10 +57,6 @@
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('planName'))]",
                 "siteConfig": {
                     "appSettings": [
-                        // {
-                        //     "name": "AzureWebJobsDashboard",
-                        //     "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2015-05-01-preview').key1)]"
-                        // },
                         {
                             "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
                             "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(variables('storageAccountid'),'2019-06-01').keys[0].value)]"
@@ -70,10 +69,6 @@
                             "name": "AzureWebJobsStorage",
                             "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(variables('storageAccountid'),'2019-06-01').keys[0].value)]"
                         },
-                        // {
-                        //     "name": "AzureWebJobsDashboard",
-                        //     "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(variables('storageAccountid'),'2019-06-01').keys[0].value)]"
-                        // },
                         {
                             "name": "FUNCTIONS_EXTENSION_VERSION",
                             "value": "~3"
