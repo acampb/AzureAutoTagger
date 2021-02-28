@@ -14,7 +14,7 @@
             "metadata": {
                 "description": "description"
             },
-            "defaultValue": "rg-autotagger-v5"
+            "defaultValue": "rg-autotagger7"
         }
     },
     "functions": [],
@@ -67,7 +67,7 @@
                         "value": "acdd72a7-3385-48ef-bd42-f606fba81ae7"
                     },
                     "principalId": {
-                        "value": "[reference('eventgridfunctionapp').outputs.functionAppIdentityId.value]"
+                        "value": "[reference('eventgridfunctionapp').outputs.managedIdentityPrincipalId.value]"
                     }
                 }
             }
@@ -91,16 +91,16 @@
                         "value": "4a9ae827-6dc8-4573-8ac7-8239d42aa03f"
                     },
                     "principalId": {
-                        "value": "[reference('eventgridfunctionapp').outputs.functionAppIdentityId.value]"
+                        "value": "[reference('eventgridfunctionapp').outputs.managedIdentityPrincipalId.value]"
                     }
                 }
             }
         }
     ],
     "outputs": {
-        "functionAppIdentityId": {
-            "type": "string",
-            "value": "[reference('eventgridfunctionapp').outputs.functionAppIdentityId.value]"
-        }
+        // "functionAppIdentityId": {
+        //     "type": "string",
+        //     "value": "[reference('eventgridfunctionapp').outputs.functionAppIdentityId.value]"
+        // }
     }
 }

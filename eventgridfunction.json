@@ -90,6 +90,10 @@
                         {
                             "name": "FUNCTIONS_WORKER_RUNTIME",
                             "value": "powershell"
+                        },
+                        {
+                            "name": "AZURE_CLIENT_ID",
+                            "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), '2018-11-30', 'full').properties.clientid]"
                         }
                     ]
                 }
