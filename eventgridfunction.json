@@ -6,6 +6,7 @@
     "variables": {
         "uniqueString": "[uniqueString(subscription().subscriptionId)]",
         //"substring": "[substring(variables('uniqueString'), 9, 4)]",
+        "identityName": "[concat('id-autotagger-', variables('uniqueString'))]",
 
         "planName": "[concat('plan-autotagger-', variables('uniqueString'))]",
         "storageAccountName": "[concat('st', variables('uniqueString'))]",
@@ -16,6 +17,12 @@
         "appInsightsName": "[concat('insights-autotagger-', variables('uniqueString'))]"
     },
     "resources": [
+        {
+            "name": "[variables('identityName')]",
+            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+            "apiVersion": "2018-11-30",
+            "location": "[resourceGroup().location]"
+        },
         {
             "name": "[variables('planName')]",
             "type": "Microsoft.Web/serverfarms",
@@ -51,7 +58,10 @@
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
             ],
             "identity": {
-                "type": "SystemAssigned"
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]": {}
+                }
             },
             "properties": {
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('planName'))]",
@@ -121,6 +131,8 @@
                 "topicType": "Microsoft.Resources.Subscriptions"
             }
         },
+        // subscription ignore authorization and deployment events
+        // filter function app id writes - http://schemas.microsoft.com/identity/claims/objectidentifier
         {
             "name": "[concat(variables('eventGridTopic'), '/', variables('eventGridSubscriptionName'))]",
             "type": "Microsoft.EventGrid/systemTopics/eventSubscriptions",
@@ -141,6 +153,15 @@
                 "filter": {
                     "includedEventTypes": [
                         "Microsoft.Resources.ResourceWriteSuccess"
+                    ],
+                    "advancedFilters": [
+                        {
+                            "key": "data.claims.appid",
+                            "operatorType": "StringNotIn",
+                            "values" :[
+                                "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), '2018-11-30', 'full').properties.clientid]"
+                            ]
+                        }
                     ]
                 }
             }
@@ -162,9 +183,13 @@
             "type": "string",
             "value": "[resourceId('Microsoft.Web/sites', variables('functionName'))]"
         },
-        "functionAppIdentityId": {
+        "managedIdentityPrincipalId": {
             "type": "string",
-            "value": "[reference(resourceId('Microsoft.Web/sites', variables('functionName')), '2019-08-01', 'full').identity.principalId]"
+            "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), '2018-11-30', 'full').properties.principalId]"
+        },
+        "managedIdentityClientId": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), '2018-11-30', 'full').properties.clientid]"
         }
     }
 }

@@ -14,7 +14,7 @@
             "metadata": {
                 "description": "description"
             },
-            "defaultValue": "rg-autotaggerv3"
+            "defaultValue": "rg-autotagger-v5"
         }
     },
     "functions": [],
