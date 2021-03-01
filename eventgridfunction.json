@@ -5,16 +5,15 @@
     "functions": [],
     "variables": {
         "uniqueString": "[uniqueString(subscription().subscriptionId)]",
-        //"substring": "[substring(variables('uniqueString'), 9, 4)]",
         "identityName": "[concat('id-autotagger-', variables('uniqueString'))]",
-
         "planName": "[concat('plan-autotagger-', variables('uniqueString'))]",
         "storageAccountName": "[concat('st', variables('uniqueString'))]",
         "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
         "functionName": "[concat('func-autotagger-', variables('uniqueString'))]",
         "eventGridTopic": "[concat('evt-autotagger-', variables('uniqueString'))]",
         "eventGridSubscriptionName": "[concat('evs-autotagger-', variables('uniqueString'))]",
-        "appInsightsName": "[concat('insights-autotagger-', variables('uniqueString'))]"
+        "appInsightsName": "[concat('insights-autotagger-', variables('uniqueString'))]",
+        "functionAppRepo": "https://github.com/acampb/AzureAutoTaggerFunction.git"
     },
     "resources": [
         {
@@ -107,7 +106,7 @@
                         "[resourceId('Microsoft.Web/sites/', variables('functionName'))]"
                     ],
                     "properties": {
-                        "RepoUrl": "https://github.com/acampb/AzureAutoTaggerFunction.git",
+                        "RepoUrl": "[variables('functionAppRepo')]",
                         "branch": "main",
                         "IsManualIntegration": true
                     }

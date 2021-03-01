@@ -14,7 +14,7 @@
             "metadata": {
                 "description": "description"
             },
-            "defaultValue": "rg-autotagger7"
+            "defaultValue": "rg-autotagger"
         }
     },
     "functions": [],
@@ -28,6 +28,8 @@
             "dependsOn": [
             ],
             "tags": {
+                "Application": "AzureAutoTagger",
+                "AppUrl": "https://github.com/acampb/AzureAutoTagger"
             }
         },
         {
