@@ -2,7 +2,6 @@
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Facampb%2FAzureAutoTagger%2Fmain%2Fazuredeploy.json)
 
-
 Azure AutoTagger is a lightweight, low-cost serverless solution that can easily be deployed to an Azure subscription. Once deployed Azure AutoTagger monitors for `ResourceWriteSucess` events within the subscription and triggers an Azure Function to automatically apply a `LastModifiedTimestamp` and `LastModifiedBy` tag.
 
 ![autotagger](/images/autotagger.png)
