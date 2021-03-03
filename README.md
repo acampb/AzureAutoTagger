@@ -7,11 +7,11 @@ Azure AutoTagger is a lightweight, low-cost serverless solution that can easily 
 
 ![autotagger](/images/autotagger.png)
 
-* [**https://cloudlumberjack.com/posts/azureautotagger/**](https://cloudlumberjack.com/posts/azureautotagger/){:target="_blank"}: More details in a blog post describing the solution.
+* [**https://cloudlumberjack.com/posts/azureautotagger/**](https://cloudlumberjack.com/posts/azureautotagger/): More details in a blog post describing the solution.
 
-* [**https://github.com/acampb/AzureAutoTagger**](https://github.com/acampb/AzureAutoTagger){:target="_blank"}: Contains the ARM template code to deploy the infrastructure and role assignments to the subscription
+* [**https://github.com/acampb/AzureAutoTagger**](https://github.com/acampb/AzureAutoTagger): Contains the ARM template code to deploy the infrastructure and role assignments to the subscription
 
-* [**https://github.com/acampb/AzureAutoTaggerFunction**](https://github.com/acampb/AzureAutoTaggerFunction){:target="_blank"}: Contains the Azure Function PowerShell code
+* [**https://github.com/acampb/AzureAutoTaggerFunction**](https://github.com/acampb/AzureAutoTaggerFunction): Contains the Azure Function PowerShell code
 
 ![tagging](/images/tagging-spedup.gif)
 
