@@ -134,8 +134,6 @@
                 "topicType": "Microsoft.Resources.Subscriptions"
             }
         },
-        // subscription ignore authorization and deployment events
-        // filter function app id writes - http://schemas.microsoft.com/identity/claims/objectidentifier
         {
             "name": "[concat(variables('eventGridTopic'), '/', variables('eventGridSubscriptionName'))]",
             "type": "Microsoft.EventGrid/systemTopics/eventSubscriptions",
